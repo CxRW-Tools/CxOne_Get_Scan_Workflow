@@ -1,1 +1,1 @@
-# CxOne_Get_Workflow
+# CxOne Get Scan Workflow Tool Usage Guide
