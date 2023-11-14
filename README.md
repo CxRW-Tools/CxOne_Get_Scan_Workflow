@@ -2,7 +2,7 @@
 
 ## Summary
 
-CxOne Scan Workflow Exporter is a Python tool designed to retrieve the workflow log from a specific scan in Checkmarx One and save it as a CSV file. This utility simplifies the process of extracting detailed workflow information, allowing for easy analysis and record-keeping of scan activities.
+This tool designed to retrieve the workflow log from a specific scan in Checkmarx One and save it as a CSV file. This utility simplifies the process of extracting detailed workflow information, allowing for easy analysis and record-keeping of scan activities.
 
 ## Syntax and Arguments
 
