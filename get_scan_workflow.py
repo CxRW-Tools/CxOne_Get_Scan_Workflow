@@ -108,6 +108,14 @@ def write_workflow_to_csv(workflow_data, output_file):
     except IOError as e:
         print(f"An error occurred while writing to the file: {e}")
 
+def read_scan_ids_from_file(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            return [line.strip() for line in file if line.strip()]
+    except IOError as e:
+        print(f"An error occurred while reading the file: {e}")
+        sys.exit(1)
+
 def main():
     global base_url
     global tenant_name
@@ -122,18 +130,20 @@ def main():
     parser.add_argument('--iam_base_url', required=False, help='Region IAM Base URL')
     parser.add_argument('--tenant_name', required=True, help='Tenant name')
     parser.add_argument('--api_key', required=True, help='API key for authentication')
-    parser.add_argument('--scan_id', required=True, help='ID of the scan to retrieve')
-    parser.add_argument('--output_file', required=True, help='Name of the output CSV file')
+    parser.add_argument('--scan_id', required=False, help='ID of the scan to retrieve')
+    parser.add_argument('--scan_id_file', required=False, help='File containing list of scan IDs')
     parser.add_argument('--debug', action='store_true', help='Enable debug output')
 
     args = parser.parse_args()
+    
+    # Ensure either scan_id or scan_id_file is provided, but not both
+    if bool(args.scan_id) == bool(args.scan_id_file):
+        parser.error("Either --scan_id or --scan_id_file must be provided, but not both.")
+    
     base_url = args.base_url
     tenant_name = args.tenant_name
-    scan_id = args.scan_id
-    output_file = args.output_file
     debug = args.debug
             
-    # Authenticate to CxOne
     if args.iam_base_url:
         iam_base_url = args.iam_base_url
     
@@ -143,14 +153,18 @@ def main():
     if auth_token is None:
         return
     
-    workflow_data = get_scan_workflow(scan_id)
-    if workflow_data is None:
-        print("Failed to retrieve workflow data.")
-        return
+    scan_ids = [args.scan_id] if args.scan_id else read_scan_ids_from_file(args.scan_id_file)
 
-    write_workflow_to_csv(workflow_data, output_file)
+    for scan_id in scan_ids:
+        workflow_data = get_scan_workflow(scan_id)
+        if workflow_data is None:
+            print(f"Failed to retrieve workflow data for scan ID {scan_id}.")
+            continue
 
-    print(f"Workflow data successfully written to {output_file}")
-  
+        # Write each workflow to a separate file named '<scan_id>.csv'
+        write_workflow_to_csv(workflow_data, f"{scan_id}.csv")
+
+    print(f"Workflow data successfully retrieved")
+
 if __name__ == "__main__":
     main()
