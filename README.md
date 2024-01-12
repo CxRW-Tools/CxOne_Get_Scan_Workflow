@@ -9,13 +9,7 @@ This tool designed to retrieve scan workflow logs from Checkmarx One and save th
 Execute the script using the following command line:
 
 ```
-python get_scan_workflow.py --base_url BASE_URL --tenant_name TENANT_NAME --api_key API_KEY --scan_id SCAN_ID [OPTIONS]
-```
-
-Or, to process multiple scans from a file:
-
-```
-python get_scan_workflow.py --base_url BASE_URL --tenant_name TENANT_NAME --api_key API_KEY --scan_id_file SCAN_ID_FILE [OPTIONS]
+python get_scan_workflow.py --base_url BASE_URL --tenant_name TENANT_NAME --api_key API_KEY [--scan_id SCAN_ID | --scan_id_file SCAN_ID_FILE] [--debug]
 ```
 
 ### Required Arguments
